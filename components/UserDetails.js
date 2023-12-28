@@ -76,12 +76,12 @@ export default function UserDetails({ logout }) {
                 name: tripDB.outboundJourney.transportSlot.departure.place.name,
               },
               destination: {
-                country: tripDB.outboundJourney.transportSlot.departure.place.country,
+                country: tripDB.outboundJourney.transportSlot.arrival.place.country,
                 //distance: "531.34",
                 //id: "657833385d1d367f59d458e4",
                 //lat: 41.3851,
                 //lon: 2.1734,
-                name: tripDB.outboundJourney.transportSlot.departure.place.name,
+                name: tripDB.outboundJourney.transportSlot.arrival.place.name,
               },
               inboundJourney: {
                 arrival: inboundArrival,
@@ -116,7 +116,7 @@ export default function UserDetails({ logout }) {
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
-        //console.log('minimalistTrips: ', minimalistTrips);
+        console.log('minimalistTrips: ', minimalistTrips);
         setSavedTrips(minimalistTrips);
     };
 
@@ -124,9 +124,9 @@ export default function UserDetails({ logout }) {
         getSavedTrips();
     }, [isFocused]);
 
-    useEffect(() => {
-        console.log('useEffect; savedTrips: ', savedTrips);
-    }, [savedTrips]);
+    // useEffect(() => {
+    //     console.log('useEffect; savedTrips: ', savedTrips);
+    // }, [savedTrips]);
 
     const HandlePressLogout = () => {
         //console.log("HandlePressLogout");
