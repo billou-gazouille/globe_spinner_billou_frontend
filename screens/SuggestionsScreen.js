@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -14,7 +14,8 @@ import { CustomText } from "../components/CustomText";
 import LoadingWheel from "../components/LoadingWheel";
 import useFetchGenerate from "../hooks/useFetchGenerate";
 import GradientFontColor from "../components/GradientFontColor";
-import toggleBookmarkTrip from "../modules/bookmarkTrip";
+//import toggleBookmarkTrip from "../modules/bookmarkTrip";
+import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { resetBookmarks, toggleBookmark } from "../reducers/userInfo";
 
 const { ipAddress, port } = require("../myVariables");
@@ -27,14 +28,20 @@ export default function SuggestionsScreen({ navigation }) {
 
   //console.log("userInfo:", filtersFromStore);
 
-  const bookmarkTrip = async (tripIndex) => {
-    const result = await toggleBookmarkTrip(
-      tripIndex,
-      userInfo.isConnected,
-      userInfo.token
-    );
-    if (!result) {
-      return;
+  const tripIds = useRef([null, null]);
+
+  const toggleSave = async (tripIndex, tripId) => {
+    const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
+    if (isCurrentlyBookmarked){
+      // unsave:
+      unsaveTrip(userInfo.isConnected, userInfo.token, tripId);
+    }
+    else{
+      // save:
+      const save = await saveTrip(userInfo.isConnected, userInfo.token, tripIndex);
+      if (save.result){
+        tripIds.current[tripIndex] = save.tripId;
+      }
     }
     dispatch(toggleBookmark(tripIndex));
   };
@@ -124,8 +131,9 @@ export default function SuggestionsScreen({ navigation }) {
                 returnDate={formattedDate(t.inboundJourney.arrival)}
                 price={1400}
                 selectTrip={selectTrip}
-                bookmarkTrip={bookmarkTrip}
+                toggleSave={toggleSave}
                 isBookmarked={userInfo.bookmarked[i]}
+                tripId={tripIds.current[i]}
               />
             );
           })}

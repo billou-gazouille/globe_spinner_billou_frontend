@@ -124,14 +124,14 @@ export default function UserDetails({ logout }) {
         getSavedTrips();
     }, [isFocused]);
 
+    useEffect(() => {
+        console.log('useEffect; savedTrips: ', savedTrips);
+    }, [savedTrips]);
+
     const HandlePressLogout = () => {
         //console.log("HandlePressLogout");
         logout();
     };
-
-    // if (savedTrips.length > 0){
-    //     console.log(savedTrips[0].accommodation);
-    // }
 
     const savedTripsJSX = savedTrips.map((trip, i) => {
         return (
