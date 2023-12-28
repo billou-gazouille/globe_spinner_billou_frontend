@@ -16,7 +16,7 @@ import useFetchGenerate from "../hooks/useFetchGenerate";
 import GradientFontColor from "../components/GradientFontColor";
 //import toggleBookmarkTrip from "../modules/bookmarkTrip";
 import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
-import { resetBookmarks, toggleBookmark } from "../reducers/userInfo";
+import { resetBookmarks, toggleBookmark, setSuggestedTripId, setSuggestedTripsIds } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
 
 const { ipAddress, port } = require("../myVariables");
@@ -30,7 +30,7 @@ export default function SuggestionsScreen({ navigation }) {
 
   //console.log("userInfo:", filtersFromStore);
 
-  const tripIds = useRef([null, null]);
+  //const tripIds = useRef([null, null]);
 
   const toggleSave = async (tripIndex, tripId) => {
     const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
@@ -42,7 +42,8 @@ export default function SuggestionsScreen({ navigation }) {
       // save:
       const save = await saveTrip(userInfo.isConnected, userInfo.token, tripIndex);
       if (save.result){
-        tripIds.current[tripIndex] = save.tripId;
+        //tripIds.current[tripIndex] = save.tripId;
+        dispatch(setSuggestedTripId({ index: tripIndex, id: save.tripId }));
       }
     }
     dispatch(toggleBookmark(tripIndex));
@@ -68,7 +69,8 @@ export default function SuggestionsScreen({ navigation }) {
 
   useEffect(() => {
     dispatch(resetBookmarks());
-    tripIds.current = [null, null];
+    //tripIds.current = [null, null];
+    dispatch(setSuggestedTripsIds([null, null]));
   }, [generatedTrips]);
 
   const regenerateAll = () => {
@@ -86,12 +88,12 @@ export default function SuggestionsScreen({ navigation }) {
       //console.log('savedTripsIds: ', savedTripsIds);
       return savedTripsIds.includes(tripId);
     };
-    checkIfTripSaved(tripIds.current[0]).then(isTrip0saved => {
+    checkIfTripSaved(userInfo.suggestedTripsIds[0]).then(isTrip0saved => {
       //console.log('isTrip0saved: ', isTrip0saved);
       if (isTrip0saved !== userInfo.bookmarked[0]) 
         dispatch(toggleBookmark(0));
     });
-    checkIfTripSaved(tripIds.current[1]).then(isTrip1saved => {
+    checkIfTripSaved(userInfo.suggestedTripsIds[1]).then(isTrip1saved => {
       //console.log('isTrip1saved: ', isTrip1saved);
       if (isTrip1saved !== userInfo.bookmarked[1]) 
         dispatch(toggleBookmark(1));
@@ -112,6 +114,7 @@ export default function SuggestionsScreen({ navigation }) {
       img: getImage(tripIndex),
       tripIndex: tripIndex,
       isBookmarked: userInfo.bookmarked[tripIndex],
+      tripId: userInfo.suggestedTripsIds[tripIndex],
     });
   };
 
@@ -156,7 +159,7 @@ export default function SuggestionsScreen({ navigation }) {
                 selectTrip={selectTrip}
                 toggleSave={toggleSave}
                 isBookmarked={userInfo.bookmarked[i]}
-                tripId={tripIds.current[i]}
+                tripId={userInfo.suggestedTripsIds[i]}
               />
             );
           })}

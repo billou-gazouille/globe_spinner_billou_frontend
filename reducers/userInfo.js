@@ -8,6 +8,7 @@ const initialState = {
     lastName: null,
     email: null,
     bookmarked: [false, false],
+    suggestedTripsIds: [null, null],
   },
 };
 
@@ -28,13 +29,20 @@ export const userInfoSlice = createSlice({
       state.value.isConnected = false;
     },
     toggleBookmark: (state, action) => {
-      console.log("action", action.payload);
+      //console.log("action", action.payload);
       state.value.bookmarked[action.payload] =
         !state.value.bookmarked[action.payload];
-      console.log("store", state.value.bookmarked);
+      //console.log("store", state.value.bookmarked);
     },
     resetBookmarks: (state) => {
       state.value.bookmarked = [false, false];
+    },
+    setSuggestedTripId: (state, action) => {
+      const { index, id } = action.payload;
+      state.value.suggestedTripsIds[index] = id;
+    },
+    setSuggestedTripsIds: (state, action) => {
+      state.value.suggestedTripsIds = action.payload;
     },
   },
 });
@@ -45,5 +53,7 @@ export const {
   loadDetails,
   toggleBookmark,
   resetBookmarks,
+  setSuggestedTripId,
+  setSuggestedTripsIds,
 } = userInfoSlice.actions;
 export default userInfoSlice.reducer;

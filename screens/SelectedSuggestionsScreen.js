@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import {
   View,
@@ -18,8 +18,12 @@ import { useSelector, useDispatch } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 import GradientFontColor from "../components/GradientFontColor";
-import toggleBookmarkTrip from "../modules/bookmarkTrip";
-import { toggleBookmark } from "../reducers/userInfo";
+//import toggleBookmarkTrip from "../modules/bookmarkTrip";
+import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
+import { toggleBookmark, setSuggestedTripId } from "../reducers/userInfo";
+import { useIsFocused } from "@react-navigation/native";
+
+import { ipAddress, port } from "../myVariables";
 
 const colors = {
   black: "#515151",
@@ -30,7 +34,7 @@ const colors = {
 
 export default function SelectedSuggestionsScreen({ navigation, route }) {
   const { width } = useWindowDimensions();
-  const { trip, img, tripIndex, isBookmarked } = route.params;
+  const { trip, img, tripIndex, isBookmarked, tripId } = route.params;
   const userInfo = useSelector((state) => state.userInfo.value);
   const dispatch = useDispatch();
 
@@ -92,17 +96,42 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
   const handleContinueToPaymentPress = () => {
     navigation.navigate("PaymentHomeStack");
   };
+
+  //const tripIdRef = useRef(tripId);
+  
   const handlePress = async () => {
-    const result = await toggleBookmarkTrip(
-      tripIndex,
-      userInfo.isConnected,
-      userInfo.token
-    );
-    if (!result) {
-      return;
+    const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
+    if (isCurrentlyBookmarked){
+      // unsave:
+      unsaveTrip(userInfo.isConnected, userInfo.token, userInfo.suggestedTripsIds[tripIndex]);
+    }
+    else{
+      // save:
+      const save = await saveTrip(userInfo.isConnected, userInfo.token, tripIndex);
+      if (save.result){
+        //tripIdRef.current = save.tripId;
+        dispatch(setSuggestedTripId({ index: tripIndex, id: save.tripId }));
+      }
     }
     dispatch(toggleBookmark(tripIndex));
   };
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) return;
+    const checkIfTripSaved = async (tripId) => {
+      if (!tripId) return false;
+      const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+            .then(resp => resp.json());
+      const savedTripsIds = savedTripsReceived.map(t => t._id);
+      return savedTripsIds.includes(tripId);
+    };
+    checkIfTripSaved(userInfo.suggestedTripsIds[tripIndex]).then(isTripSaved => {
+      if (isTripSaved !== userInfo.bookmarked[tripIndex]) 
+        dispatch(toggleBookmark(tripIndex));
+    });
+  }, [isFocused]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
