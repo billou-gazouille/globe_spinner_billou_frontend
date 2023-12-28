@@ -17,6 +17,7 @@ import GradientFontColor from "../components/GradientFontColor";
 //import toggleBookmarkTrip from "../modules/bookmarkTrip";
 import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { resetBookmarks, toggleBookmark } from "../reducers/userInfo";
+import { useIsFocused } from "@react-navigation/native";
 
 const { ipAddress, port } = require("../myVariables");
 
@@ -25,6 +26,7 @@ export default function SuggestionsScreen({ navigation }) {
   const filtersFromStore = useSelector((state) => state.filters.value);
   const [triggerFetchGenerate, setTriggerFetchGenerate] = useState(false);
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   //console.log("userInfo:", filtersFromStore);
 
@@ -66,12 +68,35 @@ export default function SuggestionsScreen({ navigation }) {
 
   useEffect(() => {
     dispatch(resetBookmarks());
+    tripIds.current = [null, null];
   }, [generatedTrips]);
 
   const regenerateAll = () => {
     //dispatch(resetBookmarks());
     setTriggerFetchGenerate((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (!isFocused) return;
+    const checkIfTripSaved = async (tripId) => {
+      if (!tripId) return false;
+      const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+            .then(resp => resp.json());
+      const savedTripsIds = savedTripsReceived.map(t => t._id);
+      //console.log('savedTripsIds: ', savedTripsIds);
+      return savedTripsIds.includes(tripId);
+    };
+    checkIfTripSaved(tripIds.current[0]).then(isTrip0saved => {
+      //console.log('isTrip0saved: ', isTrip0saved);
+      if (isTrip0saved !== userInfo.bookmarked[0]) 
+        dispatch(toggleBookmark(0));
+    });
+    checkIfTripSaved(tripIds.current[1]).then(isTrip1saved => {
+      //console.log('isTrip1saved: ', isTrip1saved);
+      if (isTrip1saved !== userInfo.bookmarked[1]) 
+        dispatch(toggleBookmark(1));
+    });
+  }, [isFocused]);
 
   const getImage = (index) => {
     let place;

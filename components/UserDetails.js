@@ -23,6 +23,8 @@ const { ipAddress, port } = require("../myVariables");
 
 import { useIsFocused } from '@react-navigation/native';
 
+import { unsaveTrip } from "../modules/saveOrUnsaveTrip";
+
 
 import {
   useFonts,
@@ -42,6 +44,7 @@ export default function UserDetails({ logout }) {
         const inboundArrival = tripDB.inboundJourney.transportSlot.arrival.date;
         const nbrOfNights = Math.abs(moment(inboundArrival).diff(moment(outboundDeparture), "days"));
         return ({
+            _id: tripDB._id,
             accommodation: {
                 accommodationBase: {
                   //_id: "6578921e5d1d367f59d459a5",
@@ -110,18 +113,19 @@ export default function UserDetails({ logout }) {
         });
     };
 
-    const getSavedTrips = async () => {
-        console.log('getSavedTrips');
+    const loadSavedTrips = async () => {
+        //console.log('getSavedTrips');
         const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
-        console.log('minimalistTrips: ', minimalistTrips);
+        //console.log('minimalistTrips: ', minimalistTrips);
         setSavedTrips(minimalistTrips);
     };
 
     useEffect(() => {
-        getSavedTrips();
+        if (!isFocused) return;
+        loadSavedTrips();
     }, [isFocused]);
 
     // useEffect(() => {
@@ -133,10 +137,24 @@ export default function UserDetails({ logout }) {
         logout();
     };
 
+    const handleDeleteTrip = (tripId) => {
+        console.log('handleDeleteTrip', tripId);
+        unsaveTrip(true, userInfo.token, tripId);
+        loadSavedTrips();
+    };
+
     const savedTripsJSX = savedTrips.map((trip, i) => {
         return (
             <View key={i}>
-                <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text>
+                    <FontAwesome 
+                        name="trash-o" 
+                        size={30} 
+                        color={'red'} 
+                        onPress={() => handleDeleteTrip(trip._id)}
+                    />
+                </View>
             </View>
         );
     })
@@ -185,7 +203,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-start",
         alignItems: "left",
-        backgroundColor: "red",
+        backgroundColor: "white",
         width: "100%",
       },
       userDetail: {
@@ -194,7 +212,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
       },
       savedTripText: {
-        color: "white",
+        color: "green",
         fontSize: 18,
       },
 });
