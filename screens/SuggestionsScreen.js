@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -39,7 +39,7 @@ export default function SuggestionsScreen({ navigation }) {
     dispatch(toggleBookmark(tripIndex));
   };
 
-  console.log("suggestions", userInfo.bookmarked);
+  //console.log("suggestions", userInfo.bookmarked);
 
   const {
     generatedTrips,
@@ -56,6 +56,12 @@ export default function SuggestionsScreen({ navigation }) {
     generateFilters: filtersFromStore,
     triggerFirstFetch: triggerFetchGenerate,
   });
+
+  // useEffect(() => {
+  //   if (generatedTrips){
+  //     console.log('generatedTrips[0]: ', generatedTrips[0]);
+  //   }
+  // }, [generatedTrips]);
 
   const regenerateAll = () => {
     dispatch(resetBookmarks());

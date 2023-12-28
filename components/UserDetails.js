@@ -11,11 +11,11 @@ import {
     StatusBar,
 } from "react-native";
 
+import moment from 'moment';
+
 import GradientFontColor from "../components/GradientFontColor";
 import { CustomText } from "../components/CustomText";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-
-import moment from 'moment';
 
 import { useSelector } from "react-redux";
 
@@ -35,19 +35,94 @@ export default function UserDetails({ logout }) {
 
     const [savedTrips, setSavedTrips] = useState([]);
 
-    const isFocused = useIsFocused(); 
+    const isFocused = useIsFocused();
+    
+    const getMinimalistTripFormat = (tripDB) => {
+        const outboundDeparture = tripDB.outboundJourney.transportSlot.departure.date;
+        const inboundArrival = tripDB.inboundJourney.transportSlot.arrival.date;
+        const nbrOfNights = Math.abs(moment(inboundArrival).diff(moment(outboundDeparture), "days"));
+        return ({
+            accommodation: {
+                accommodationBase: {
+                  //_id: "6578921e5d1d367f59d459a5",
+                  address: tripDB.accommodation.accommodationRoom.accommodationBase.address,
+                  //contactInfo: {},
+                  //description: "Modern hotel with panoramic views of the Mediterranean",
+                  //isBreakfastIncluded: true,
+                  //location: {},
+                  name: tripDB.accommodation.accommodationRoom.accommodationBase.name,
+                  //possibleExtras: [],
+                  //type: "hotel"
+                },
+                basePricePerNight: tripDB.accommodation.accommodationRoom.basePricePerNight,
+                //bookings: [],
+                //locationArray: [2.1734, 41.3851],
+                //maxNbPeople: 2,
+                //roomNb: "72H",
+                //variations: []
+              },
+              activities: tripDB.activities.map(a => ({
+                    activityBase: a.activitySlot.activityBase,
+                    startTime: a.activitySlot.startTime,
+                    endTime: a.activitySlot.endTime,
+                    price: a.activitySlot.price,
+                })),
+              departureLocation: {
+                //country: "Switzerland",
+                //distance: "254.20",
+                //id: "657833385d1d367f59d45909",
+                //lat: 46.5933,
+                //lon: 7.9085,
+                name: tripDB.outboundJourney.transportSlot.departure.place.name,
+              },
+              destination: {
+                country: tripDB.outboundJourney.transportSlot.departure.place.country,
+                //distance: "531.34",
+                //id: "657833385d1d367f59d458e4",
+                //lat: 41.3851,
+                //lon: 2.1734,
+                name: tripDB.outboundJourney.transportSlot.departure.place.name,
+              },
+              inboundJourney: {
+                arrival: inboundArrival,
+                //class: "secondClass",
+                departure: tripDB.inboundJourney.transportSlot.departure.date,
+                //id: "657b140fca1c0d5ff082aa8a",
+                //price: 7.38,
+                //seats: {"from": 2, "to": 3},
+                type: tripDB.inboundJourney.transportSlot.transportBase.type,
+              },
+              //nbrOfActivities: 3,
+              nbrOfNights: nbrOfNights,
+              numberOfTravelers: tripDB.nbOfTravelers,
+              outboundJourney: {
+                arrival: tripDB.outboundJourney.transportSlot.arrival.date,
+                //class: "secondClass",
+                departure: outboundDeparture,
+                //id: "657b10bc3cdc34e4d613b63b",
+                //price: 22.15,
+                //seats: {"from": 0, "to": 1},
+                type: tripDB.outboundJourney.transportSlot.transportBase.type,
+              },
+              total: tripDB.totalPaidAmount,
+              //totalActivities: 85.42,
+              //totalTransport: 29.54
+        });
+    };
 
-    // const getSavedTrips = async () => {
-    //     console.log('getSavedTrips');
-    //     const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
-    //         .then(resp => resp.json());
-    //     //console.log('savedTripsReceived: ', savedTripsReceived);
-    //     setSavedTrips(savedTripsReceived);
-    // };
+    const getSavedTrips = async () => {
+        console.log('getSavedTrips');
+        const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+            .then(resp => resp.json());
+        //console.log('savedTripsReceived: ', savedTripsReceived);
+        const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
+        //console.log('minimalistTrips: ', minimalistTrips);
+        setSavedTrips(minimalistTrips);
+    };
 
-    // useEffect(() => {
-    //     getSavedTrips();
-    // }, [isFocused]);
+    useEffect(() => {
+        getSavedTrips();
+    }, [isFocused]);
 
     const HandlePressLogout = () => {
         //console.log("HandlePressLogout");
@@ -59,12 +134,9 @@ export default function UserDetails({ logout }) {
     // }
 
     const savedTripsJSX = savedTrips.map((trip, i) => {
-        const startDate = trip.outboundJourney.transportSlot.departure.date;
-        const endDate = trip.inboundJourney.transportSlot.arrival.date;
-        const nbDays = moment(endDate).diff(moment(startDate), 'days');
         return (
             <View key={i}>
-                <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({nbDays} days)</Text>
+                <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text>
             </View>
         );
     })
