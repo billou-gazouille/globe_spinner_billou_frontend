@@ -64,14 +64,12 @@ export default function SuggestionsScreen({ navigation }) {
     triggerFirstFetch: triggerFetchGenerate,
   });
 
-  // useEffect(() => {
-  //   if (generatedTrips){
-  //     console.log('generatedTrips[0]: ', generatedTrips[0]);
-  //   }
-  // }, [generatedTrips]);
+  useEffect(() => {
+    dispatch(resetBookmarks());
+  }, [generatedTrips]);
 
   const regenerateAll = () => {
-    dispatch(resetBookmarks());
+    //dispatch(resetBookmarks());
     setTriggerFetchGenerate((prev) => !prev);
   };
 
