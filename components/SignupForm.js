@@ -178,17 +178,17 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     flexDirection: "row",
-    marginBottom: 10,
+    //marginBottom: 10,
     justifyContent: "center",
   },
 
   title: {
-    marginVertical: 45,
+    //marginVertical: 45,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
   },
   titleUp: {
-    marginVertical: 45,
+    //marginVertical: 45,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
     color: "#515151",
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
 
   inputsContainerRow: {
     width: "100%",
-    marginVertical: 20,
+    //marginVertical: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     width: "600%",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
+    //marginBottom: 10,
   },
   textInput: {
     width: "10%",
@@ -220,14 +220,14 @@ const styles = StyleSheet.create({
     height: 30,
     top: 10,
     right: -200,
-    marginBottom: 50,
+    //marginBottom: 50,
     zIndex: 99,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
   },
   submitButton: {
-    marginVertical: 10,
+    //marginVertical: 10,
     padding: 10,
     backgroundColor: "#3972D9",
     borderRadius: 25,

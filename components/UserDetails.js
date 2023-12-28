@@ -137,24 +137,40 @@ export default function UserDetails({ logout }) {
         logout();
     };
 
-    const handleDeleteTrip = (tripId) => {
+    const handleDeleteTrip = async (tripId) => {
         console.log('handleDeleteTrip', tripId);
-        unsaveTrip(true, userInfo.token, tripId);
+        await unsaveTrip(true, userInfo.token, tripId);
         loadSavedTrips();
     };
 
     const savedTripsJSX = savedTrips.map((trip, i) => {
         return (
-            <View key={i}>
-                <View style={{flexDirection: 'row'}}>
-                    <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text>
+            <View key={i} style={styles.savedTripItem}>
+                {/* <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text> */}
+                <TouchableOpacity style={{
+                    width: '60%', 
+                    justifyContent: 'center',
+                    backgroundColor: 'pink',
+                }}
+                >
+                    <Text style={styles.savedTripText}>- {trip.destination.name} ({trip.nbrOfNights} nights)</Text>
+                </TouchableOpacity> 
+                <TouchableOpacity 
+                    style={{
+                        width: '20%', 
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: 'orange',
+                    }}
+                    onPress={() => handleDeleteTrip(trip._id)}
+                >
                     <FontAwesome 
                         name="trash-o" 
                         size={30} 
                         color={'red'} 
-                        onPress={() => handleDeleteTrip(trip._id)}
+                        //style={{marginLeft: 50}}
                     />
-                </View>
+                </TouchableOpacity>          
             </View>
         );
     })
@@ -193,7 +209,9 @@ export default function UserDetails({ logout }) {
                 <Text style={{ fontSize: 16, color: "black" }}>Get saved trips</Text>
             </TouchableOpacity> */}
             <Text style={{...styles.savedTripText, fontSize: 22, fontWeight: 'bold', marginTop: 50, marginBottom: 20}}>Saved trips:</Text>
-            {savedTripsJSX}
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                {savedTripsJSX}
+            </ScrollView>
         </View>
     );
 };
@@ -213,6 +231,22 @@ const styles = StyleSheet.create({
       },
       savedTripText: {
         color: "green",
-        fontSize: 18,
+        fontSize: 16,
       },
+      savedTripItem: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        //marginHorizontal: 20,
+        marginVertical: 5,
+        width: '90%',
+        height: 40,
+        borderWidth: 1,
+    },
+    scrollView: {
+        width: '100%',
+        //borderWidth: 1,
+        backgroundColor: 'blue',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

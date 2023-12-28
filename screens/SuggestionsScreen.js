@@ -21,6 +21,8 @@ import { useIsFocused } from "@react-navigation/native";
 
 const { ipAddress, port } = require("../myVariables");
 
+const DEFAULT_LANDSCAPE_URI = 'https://images.pexels.com/photos/19511286/pexels-photo-19511286.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200';
+
 export default function SuggestionsScreen({ navigation }) {
   const userInfo = useSelector((state) => state.userInfo.value);
   const filtersFromStore = useSelector((state) => state.filters.value);
@@ -105,7 +107,9 @@ export default function SuggestionsScreen({ navigation }) {
     if (index === 0) place = place1;
     else if (index === 1) place = place2;
     if (!place) return require("../assets/default_city.jpg");
-    return { uri: place.photos[0].src.landscape };
+    const landscapeURI = place.photos[0].src.landscape;
+    if (landscapeURI === DEFAULT_LANDSCAPE_URI) return require("../assets/default_city.jpg");
+    return { uri: landscapeURI };
   };
 
   const selectTrip = (tripIndex) => {
