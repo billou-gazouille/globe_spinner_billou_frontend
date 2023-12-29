@@ -114,7 +114,7 @@ const TabNavigator = () => {
                 paddingVertical: 10,
                 // paddingBottom: 8,
                 // paddingTop: 8,
-                marginTop: 10,
+                //marginTop: 10,
               }}
             >
               <FontAwesome name={iconName} size={size} color={color} />
