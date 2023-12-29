@@ -138,7 +138,6 @@ export default function UserDetails({ logout }) {
     };
 
     const handleDeleteTrip = async (tripId) => {
-        console.log('handleDeleteTrip', tripId);
         await unsaveTrip(true, userInfo.token, tripId);
         loadSavedTrips();
     };
@@ -147,21 +146,12 @@ export default function UserDetails({ logout }) {
         return (
             <View key={i} style={styles.savedTripItem}>
                 {/* <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text> */}
-                <TouchableOpacity style={{
-                    width: '60%', 
-                    justifyContent: 'center',
-                    backgroundColor: 'pink',
-                }}
+                <TouchableOpacity style={styles.savedTripButton}
                 >
-                    <Text style={styles.savedTripText}>- {trip.destination.name} ({trip.nbrOfNights} nights)</Text>
+                    <CustomText style={styles.savedTripText}>{trip.destination.name} ({trip.nbrOfNights} nights)</CustomText>
                 </TouchableOpacity> 
                 <TouchableOpacity 
-                    style={{
-                        width: '20%', 
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'orange',
-                    }}
+                    style={styles.trashButton}
                     onPress={() => handleDeleteTrip(trip._id)}
                 >
                     <FontAwesome 
@@ -178,10 +168,10 @@ export default function UserDetails({ logout }) {
     return (
         <View style={styles.container}>
             {/* <Text style={{ fontSize: 30, color: "black" }}>User details...</Text> */}
-            <GradientFontColor style={styles.hello}>
-                Hello {userInfo.firstname} !
+            <GradientFontColor style={{fontSize: 28}}>
+                Hello {userInfo.firstName} !
             </GradientFontColor>
-            <CustomText style={{ color: "black", fontSize: 26, margin: 20 }}>
+            <CustomText style={{ color: "black", fontSize: 24, margin: 20, fontWeight: 'bold' }}>
                 My account info
             </CustomText>
             <View style={styles.userDetailsContainer}>
@@ -199,16 +189,11 @@ export default function UserDetails({ logout }) {
                 style={styles.logoutButton}
                 onPress={() => HandlePressLogout()}
             >
-                <Text style={{ fontSize: 16, color: "black" }}>Logout</Text>
-                <FontAwesome name="sign-out" size={40} style={styles.logout} />
+                <Text style={{ fontSize: 16, color: "black", fontWeight: 'bold',marginRight: 10 }}>Logout</Text>
+                <FontAwesome name="sign-out" size={40} color={'black'} />
             </TouchableOpacity>
-            {/* <TouchableOpacity
-                style={{width: 300, height: 100, borderWidth: 1}}
-                onPress={() => getSavedTrips()}
-            >
-                <Text style={{ fontSize: 16, color: "black" }}>Get saved trips</Text>
-            </TouchableOpacity> */}
-            <Text style={{...styles.savedTripText, fontSize: 22, fontWeight: 'bold', marginTop: 50, marginBottom: 20}}>Saved trips:</Text>
+            <CustomText style={styles.savedTripsTitle}>My saved trips ({savedTrips.length})</CustomText>
+            {!savedTrips.length && <CustomText style={{fontSize: 16}}>You don't have any saved trips.</CustomText>}
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {savedTripsJSX}
             </ScrollView>
@@ -218,34 +203,69 @@ export default function UserDetails({ logout }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        //flex: 1,
+        width: '100%',
+        height: '95%',
         justifyContent: "flex-start",
-        alignItems: "left",
+        alignItems: "center",
         backgroundColor: "white",
-        width: "100%",
+        //borderWidth: 1,
       },
       userDetail: {
         color: "black",
+        fontSize: 18,
+        marginBottom: 10,
+      },
+      logoutButton: {
+        width: 150,
+        margin: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        //borderWidth: 1,
+        backgroundColor: '#BA99FE',
+        borderRadius: 10,
+      },
+      savedTripsTitle: {
         fontSize: 24,
-        marginBottom: 20,
+        color: 'black',
+        fontWeight: 'bold',
+        marginTop: 30,
+        marginBottom: 10,
       },
       savedTripText: {
-        color: "green",
+        color: "white",
         fontSize: 16,
+        marginLeft: 10,
       },
       savedTripItem: {
         flexDirection: 'row', 
         justifyContent: 'space-between',
         //marginHorizontal: 20,
-        marginVertical: 5,
+        marginVertical: 10,
+        marginLeft: 20,
         width: '90%',
         height: 40,
+        //borderWidth: 1,
+    },
+    savedTripButton: {
+        width: '75%', 
+        justifyContent: 'center',
+        backgroundColor: '#3972D9',
+        borderRadius: 10,
+    },
+    trashButton: {
+        width: '15%', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        //backgroundColor: 'orange',
         borderWidth: 1,
+        borderRadius: 10,
     },
     scrollView: {
-        width: '100%',
-        //borderWidth: 1,
-        backgroundColor: 'blue',
+        width: '90%',
+        borderWidth: 1,
+        backgroundColor: '#F4F4F4',
         justifyContent: 'center',
         alignItems: 'center',
     },

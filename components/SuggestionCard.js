@@ -10,6 +10,8 @@ import {
 import { CustomText } from "./CustomText";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+import { useSelector } from "react-redux";
+
 export default function SuggestionCard({
   tripIndex,
   cityName,
@@ -26,20 +28,22 @@ export default function SuggestionCard({
   isBookmarked,
   tripId,
 }) {
-  // console.log("hhh", isBookmarked);
+
+  const userInfo = useSelector((state) => state.userInfo.value);
+  // only show bookmark if user is connected
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => selectTrip(tripIndex)}
     >
       <View style={styles.cityImgContainer}>
-        <FontAwesome
+        {userInfo.isConnected && <FontAwesome
           style={styles.bookmark}
           name="bookmark"
           size={30}
           color={isBookmarked ? "#BA99FE" : "white"}
           onPress={() => toggleSave(tripIndex, tripId)}
-        />
+        />}
         <CustomText
           style={{
             ...styles.cityTitle,

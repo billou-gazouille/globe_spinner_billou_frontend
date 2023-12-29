@@ -132,7 +132,8 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
         dispatch(toggleBookmark(tripIndex));
     });
   }, [isFocused]);
-
+  
+  // only show bookmark if user is connected
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <StatusBar style="auto" />
@@ -144,13 +145,13 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
             {trip.destination.name} - {trip.destination.country}
           </CustomText>
         </View>
-        <FontAwesome
+        {userInfo.isConnected && <FontAwesome
           style={styles.bookmark}
           name="bookmark"
           size={30}
           color={userInfo.bookmarked[tripIndex] ? colors.purple : "white"}
           onPress={() => handlePress()}
-        />
+        />}
       </ImageBackground>
       <View style={styles.priceContainer}>
         <CustomText style={styles.text}>
