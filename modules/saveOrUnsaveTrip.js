@@ -9,6 +9,7 @@ const saveTrip = async (isConnected, token, tripIndex) => {
   // save:
   //const url = `http://${ipAddress}:${port}/users/${token}/saveTrip/${tripIndex}`;
   const url = `${backendURLprefix}users/${token}/saveTrip/${tripIndex}`;
+  //console.log('url: ', url);
   const data = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
