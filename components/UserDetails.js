@@ -19,7 +19,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 import { useSelector } from "react-redux";
 
-const { ipAddress, port } = require("../myVariables");
+const { ipAddress, port, backendURLprefix } = require("../myVariables");
 
 import { useIsFocused } from '@react-navigation/native';
 
@@ -115,7 +115,8 @@ export default function UserDetails({ logout }) {
 
     const loadSavedTrips = async () => {
         //console.log('getSavedTrips');
-        const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+        //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+        const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));

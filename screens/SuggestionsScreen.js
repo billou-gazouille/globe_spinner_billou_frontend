@@ -19,7 +19,7 @@ import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { resetBookmarks, toggleBookmark, setSuggestedTripId, setSuggestedTripsIds } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
 
-const { ipAddress, port } = require("../myVariables");
+const { ipAddress, port, backendURLprefix } = require("../myVariables");
 
 const DEFAULT_LANDSCAPE_URI = 'https://images.pexels.com/photos/19511286/pexels-photo-19511286.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200';
 
@@ -64,7 +64,8 @@ export default function SuggestionsScreen({ navigation }) {
     isLoadingPlace2,
     errorPlace2,
   } = useFetchGenerate({
-    generateRouteURL: `http://${ipAddress}:${port}/trips/generate`,
+    //generateRouteURL: `http://${ipAddress}:${port}/trips/generate`,
+    generateRouteURL: `${backendURLprefix}trips/generate`,
     generateFilters: filtersFromStore,
     triggerFirstFetch: triggerFetchGenerate,
   });
@@ -84,8 +85,9 @@ export default function SuggestionsScreen({ navigation }) {
     if (!isFocused) return;
     const checkIfTripSaved = async (tripId) => {
       if (!tripId) return false;
-      const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
-            .then(resp => resp.json());
+      //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+      const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)      
+        .then(resp => resp.json());
       const savedTripsIds = savedTripsReceived.map(t => t._id);
       //console.log('savedTripsIds: ', savedTripsIds);
       return savedTripsIds.includes(tripId);

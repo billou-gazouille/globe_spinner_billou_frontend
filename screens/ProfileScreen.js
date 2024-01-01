@@ -30,7 +30,7 @@ import SigninForm from "../components/SigninForm";
 import SignupForm from "../components/SignupForm";
 import { CustomText } from "../components/CustomText";
 
-const { ipAddress, port } = require("../myVariables");
+const { ipAddress, port, backendURLprefix } = require("../myVariables");
 
 export default function ProfileScreen({ navigation }) {
   const { height, width } = useWindowDimensions();
@@ -54,7 +54,8 @@ export default function ProfileScreen({ navigation }) {
   const signIn = async (email, password) => {
     //console.log("handleSubmitSigninForm");
     // setIsSigningIn(false);
-    const data = await fetch(`http://${ipAddress}:${port}/users/signin`, {
+    //const data = await fetch(`http://${ipAddress}:${port}/users/signin`, {
+    const data = await fetch(`${backendURLprefix}users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -78,7 +79,8 @@ export default function ProfileScreen({ navigation }) {
 
   const signUp = async (firstName, lastName, email, password) => {
     // setIsSigningUp(false);
-    const data = await fetch(`http://${ipAddress}:${port}/users/signup`, {
+    //const data = await fetch(`http://${ipAddress}:${port}/users/signup`, {
+    const data = await fetch(`${backendURLprefix}users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password }),

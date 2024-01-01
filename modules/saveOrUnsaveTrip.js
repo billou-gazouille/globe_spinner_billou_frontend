@@ -1,4 +1,4 @@
-import { ipAddress, port } from "../myVariables";
+import { ipAddress, port, backendURLprefix } from "../myVariables";
 
 
 const saveTrip = async (isConnected, token, tripIndex) => {
@@ -7,7 +7,8 @@ const saveTrip = async (isConnected, token, tripIndex) => {
     return { result: false };
   }
   // save:
-  const url = `http://${ipAddress}:${port}/users/${token}/saveTrip/${tripIndex}`;
+  //const url = `http://${ipAddress}:${port}/users/${token}/saveTrip/${tripIndex}`;
+  const url = `${backendURLprefix}users/${token}/saveTrip/${tripIndex}`;
   const data = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -23,7 +24,8 @@ const unsaveTrip = async (isConnected, token, tripId) => {
     return { result: false };
   }
   // unsave:
-  const url = `http://${ipAddress}:${port}/users/${token}/unsaveTripById/${tripId}`;
+  //const url = `http://${ipAddress}:${port}/users/${token}/unsaveTripById/${tripId}`;
+  const url = `${backendURLprefix}users/${token}/unsaveTripById/${tripId}`;
   const data = await fetch(url, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },

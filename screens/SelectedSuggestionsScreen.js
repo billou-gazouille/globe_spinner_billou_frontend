@@ -23,7 +23,7 @@ import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { toggleBookmark, setSuggestedTripId } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
 
-import { ipAddress, port } from "../myVariables";
+import { ipAddress, port, backendURLprefix } from "../myVariables";
 
 const colors = {
   black: "#515151",
@@ -122,8 +122,9 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
     if (!isFocused) return;
     const checkIfTripSaved = async (tripId) => {
       if (!tripId) return false;
-      const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
-            .then(resp => resp.json());
+      //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
+      const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)      
+        .then(resp => resp.json());
       const savedTripsIds = savedTripsReceived.map(t => t._id);
       return savedTripsIds.includes(tripId);
     };
