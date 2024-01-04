@@ -54,18 +54,18 @@ export default function SignupForm({ submit, closeModal }) {
       return Alert.alert("Some fields are missing!");
     }
     if (!EMAIL_REGEX.test(email)) {
-      return Alert.alert("Wrong email adress or");
+      return Alert.alert("Wrong email address format");
     }
     if (password !== confirmPassword) {
-      return Alert.alert("Password doesn't match!");
+      return Alert.alert("Passwords don't match!");
     }
     if (password.length < 5) {
-      return Alert.alert("Some fields are missing!");
+      return Alert.alert("Password must be at least 5 characters long!");
     }
     const response = await submit(firstname, lastname, email, password);
     //console.log(response);
     if (!response.result) {
-      return Alert.alert("Some fields are missing!");
+      return Alert.alert(response.error);
     }
   };
 
