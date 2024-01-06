@@ -131,7 +131,10 @@ export default function ProfileScreen({ navigation }) {
   //   dispatch(disconnect());
   // };
 
-  const userDetails = <UserDetails logout={() => dispatch(disconnect())} />;
+  const userDetails = <UserDetails 
+    logout={() => dispatch(disconnect())} 
+    navigation={navigation} 
+  />;
 
   const modalToShow = () => {
     if (isSigningIn) return signinForm;

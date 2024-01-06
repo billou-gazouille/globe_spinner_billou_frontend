@@ -31,7 +31,18 @@ import {
   NunitoSans_400Regular,
 } from "@expo-google-fonts/nunito-sans";
 
-export default function UserDetails({ logout }) {
+
+const DEFAULT_LANDSCAPE_URI = 'https://images.pexels.com/photos/19511286/pexels-photo-19511286.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200';
+const imagesAPIprefix = "https://api.pexels.com/v1/search?query=";
+
+const imageAPIoptions = {
+    headers: {
+      Authorization: "5t6cWcJQKyLgJsDtnmjZX8fLomdIIvsa46xUgeXPcL5AZMAK4r2GODOm",
+    },
+};
+
+
+export default function UserDetails({ logout, navigation }) {
 
     const userInfo = useSelector((state) => state.userInfo.value);
 
@@ -113,14 +124,24 @@ export default function UserDetails({ logout }) {
         });
     };
 
+    const getPlaceImage = async (placeName) => {
+        const placeURL = `${imagesAPIprefix}${placeName}+aerial`;
+        const place = await fetch(placeURL, imageAPIoptions)
+            .then(resp => resp.json()); 
+        const landscapeURI = place.photos[0].src.landscape;
+        if (landscapeURI === DEFAULT_LANDSCAPE_URI) return require("../assets/default_city.jpg");
+        return { uri: landscapeURI };
+    };
+
     const loadSavedTrips = async () => {
-        //console.log('getSavedTrips');
-        //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
         const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
         //console.log('minimalistTrips: ', minimalistTrips);
+        const imagesURLs = await Promise.all(minimalistTrips.map(t => getPlaceImage(t.destination.name)));
+        //console.log(imagesURLs);
+        minimalistTrips.forEach((t, i) => t.img = imagesURLs[i]);
         setSavedTrips(minimalistTrips);
     };
 
@@ -143,11 +164,27 @@ export default function UserDetails({ logout }) {
         loadSavedTrips();
     };
 
+    const openTrip = (tripId) => {
+        const trip = savedTrips.find(t => t._id === tripId);
+        //console.log('trip.img: ', trip.img);
+        navigation.navigate("SelectedSuggestionsHomeStack", {
+            trip: trip,
+            //img: getImage(tripIndex),
+            //img: require("../assets/default_city.jpg"),
+            img: trip.img,
+            tripIndex: null,
+            isBookmarked: true,
+            tripId: tripId,
+          });
+    };
+
     const savedTripsJSX = savedTrips.map((trip, i) => {
         return (
             <View key={i} style={styles.savedTripItem}>
                 {/* <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text> */}
-                <TouchableOpacity style={styles.savedTripButton}
+                <TouchableOpacity 
+                    style={styles.savedTripButton} 
+                    onPress={() => openTrip(trip._id)} 
                 >
                     <CustomText style={styles.savedTripText}>{trip.destination.name} ({trip.nbrOfNights} nights)</CustomText>
                 </TouchableOpacity> 

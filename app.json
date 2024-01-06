@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "globe_spinner_frontend",
-    "slug": "globe_spinner_frontend",
+    "name": "Globe-Spinner",
+    "slug": "globe-spinner",
+    "description": "Let randomness dictate the course of your holiday.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +26,18 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "62029b92-bcd6-40af-ac84-787275eec635"
+      }
+    },
+    "owner": "billou",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/62029b92-bcd6-40af-ac84-787275eec635"
     }
   }
 }

@@ -32,7 +32,11 @@ const colors = {
   blue: "#3972D9",
 };
 
+
 export default function SelectedSuggestionsScreen({ navigation, route }) {
+  
+  const scrollViewRef = useRef(null);
+  
   const { width } = useWindowDimensions();
   const { trip, img, tripIndex, isBookmarked, tripId } = route.params;
   const userInfo = useSelector((state) => state.userInfo.value);
@@ -84,8 +88,9 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
             {e.price} €
           </CustomText>
           <CustomText>
-            <FontAwesome name="map-marker" size={30} color={colors.purple} />
-            {/* {location} */}
+            <FontAwesome name="map-marker" size={30} color={colors.purple}/>
+            {"  lat: " + trip.activities[i].activityBase.location.latitude.toFixed(5) 
+            + ";    lon: " + trip.activities[i].activityBase.location.longitude.toFixed(5)}
           </CustomText>
         </View>
       </View>
@@ -100,6 +105,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
   //const tripIdRef = useRef(tripId);
   
   const handlePress = async () => {
+    //if (tripIndex !== null) return;
     const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
     if (isCurrentlyBookmarked){
       // unsave:
@@ -120,6 +126,9 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
 
   useEffect(() => {
     if (!isFocused) return;
+    scrollViewRef.current?.scrollTo({ y: 0, animated: false });  // go back to top
+
+    if (tripIndex === null) return;
     const checkIfTripSaved = async (tripId) => {
       if (!tripId) return false;
       //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
@@ -136,7 +145,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
   
   // only show bookmark if user is connected
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}  ref={scrollViewRef}>
       <StatusBar style="auto" />
 
       <ImageBackground source={img} style={styles.imageBackground}>
@@ -146,7 +155,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
             {trip.destination.name} - {trip.destination.country}
           </CustomText>
         </View>
-        {userInfo.isConnected && <FontAwesome
+        {userInfo.isConnected && tripIndex !== null && <FontAwesome
           style={styles.bookmark}
           name="bookmark"
           size={30}
