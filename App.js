@@ -129,7 +129,8 @@ const TabNavigator = () => {
         tabBarStyle: { backgroundColor: "#ba99fe" },
       })}
     >
-      <Tab.Screen name="Profile" component={ProfileStack} />
+      {/* <Tab.Screen name="Profile" component={ProfileStack} /> */}
+      <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Parameters" component={ParametersScreen} />
     </Tab.Navigator>
@@ -137,7 +138,8 @@ const TabNavigator = () => {
 };
 
 export default function App() {
-  // AsyncStorage.clear();
+  //AsyncStorage.clear();
+  //persistor.purge();
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

@@ -121,6 +121,7 @@ export default function SuggestionsScreen({ navigation }) {
       tripIndex: tripIndex,
       isBookmarked: userInfo.bookmarked[tripIndex],
       tripId: userInfo.suggestedTripsIds[tripIndex],
+      isReserved: false,
     });
   };
 

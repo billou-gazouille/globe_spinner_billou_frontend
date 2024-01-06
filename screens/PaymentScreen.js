@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Image,
@@ -16,12 +16,84 @@ import {
   useFonts,
   NunitoSans_400Regular,
 } from "@expo-google-fonts/nunito-sans";
-const PaymentScreen = () => {
-  const navigation = useNavigation();
-  const [saveCardDetails, setSaveCardDetails] = useState(false);
-  const [checked, setChecked] = useState(false);
 
-  const handlePayPress = () => {
+import { toggleSaveBankCardDetails } from "../reducers/userInfo";
+
+const { backendURLprefix } = require('../myVariables');
+import { useSelector, useDispatch } from "react-redux";
+
+import LoadingWheel from '../components/LoadingWheel';
+
+const PaymentScreen = ({ route }) => {
+  const { tripId } = route.params;
+  const navigation = useNavigation();
+
+  const userInfo = useSelector((state) => state.userInfo.value);
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const currentDate = new Date();
+
+  const [nameOnCard, setNameOnCard] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiryMonth, setExpiryMonth] = useState(`${currentDate.getMonth()}`+1);
+  const [expiryYear, setExpiryYear] = useState(`${currentDate.getFullYear()}`);
+  const [cvv, setCvv] = useState('');
+
+  const expiryDate = new Date(Number(expiryYear), Number(expiryMonth)-1);
+
+
+  useEffect(() => {
+    const loadDetails = async () => {
+      const url = `${backendURLprefix}users/${userInfo.token}/bankCardInfo`;
+      const { bankCardInfo } = await fetch(url).then(resp => resp.json());
+      
+      const expiryDate = new Date(bankCardInfo.expiryDate);
+      const month = expiryDate.getMonth();
+      const year = expiryDate.getFullYear();
+      
+      setNameOnCard(bankCardInfo.nameOnCard);
+      setCardNumber(bankCardInfo.cardNumber);
+      setExpiryMonth(`${month+1}`);
+      setExpiryYear(`${year}`);
+      setCvv(bankCardInfo.cvv);
+    };
+    
+    if (userInfo.saveBankCardDetails){
+      // load details from database:
+      loadDetails();
+    }
+  }, []);
+
+
+  const handlePayPress = async () => {
+    if (userInfo.saveBankCardDetails){
+      const details = { nameOnCard, cardNumber, expiryDate, cvv };
+      const url = `${backendURLprefix}users/${userInfo.token}/addPaiyementInfo`;
+      setIsLoading(true);
+      const addInfo = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(details),
+      })
+        .then(resp => resp.json());
+      setIsLoading(false);
+      if (!addInfo.result){
+        console.log(addInfo.message);
+        return;
+      }
+    }
+    const url = `${backendURLprefix}users/${userInfo.token}/reserveTripById/${tripId}`;
+      const pay = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then(resp => resp.json());
+    if (!pay.result) {
+      console.log(pay.error);
+      return;
+    }
     navigation.navigate("RecapHomeStack");
   };
 
@@ -34,11 +106,12 @@ const PaymentScreen = () => {
 
   return (
     <ScrollView>
+      {isLoading && <LoadingWheel/>}
       <View style={styles.container}>
         <View style={[styles.subtitleContainer, { height: 30 }]}>
           <MaterialIcons name="person" size={21} color="#BA99FE" />
 
-          <Text style={[styles.signInText, { color: "#414141" }]}>
+          <Text style={[styles.subtitle, { color: "#414141" }]}>
             Bank Card User
           </Text>
         </View>
@@ -46,52 +119,74 @@ const PaymentScreen = () => {
         <TextInput
           style={[styles.input, { fontFamily: "NunitoSans_400Regular" }]}
           placeholder="Enter your name"
+          value={nameOnCard}
+          onChangeText={(text) => setNameOnCard(text)}
         />
 
         <View style={styles.subtitleContainer}>
           <FontAwesome name="credit-card" size={20} color="#BA99FE" />
-          <Text style={[styles.signInText, { color: "#414141" }]}>
+          <Text style={[styles.subtitle, { color: "#414141" }]}>
             Card Number
           </Text>
         </View>
         <TextInput
           style={[styles.input, { fontFamily: "NunitoSans_400Regular" }]}
-          placeholder="Enter card number" maxLength={16}  keyboardType="numeric"
+          placeholder="Enter card number" maxLength={16} keyboardType="numeric"
+          value={cardNumber}
+          onChangeText={(text) => setCardNumber(text)}
         />
 
         <View style={styles.subtitleContainer}>
           <Entypo name="calendar" size={20} color="#BA99FE" />
-          <Text style={[styles.signInText, { color: "#414141" }]}>
+          <Text style={[styles.subtitle, { color: "#414141" }]}>
             Expiry Date
           </Text>
         </View>
-        <TextInput
-          style={[styles.input, { fontFamily: "NunitoSans_400Regular" }]}
-          placeholder="MM/YYYY"
-        />
+
+        <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+          <TextInput
+            style={{...styles.input, width: '30%', fontFamily: "NunitoSans_400Regular" }}
+            placeholder="MM"
+            keyboardType="numeric"
+            value={expiryMonth}
+            onChangeText={(text) => setExpiryMonth(text)}
+          />
+          <View style={{alignItems: 'center', width: '10%', marginTop: 5}}>
+            <Text style={{fontSize: 20}}>/</Text>
+          </View>
+          <TextInput
+            style={{...styles.input, width: '60%', fontFamily: "NunitoSans_400Regular" }}
+            placeholder="YYYY"
+            keyboardType="numeric"
+            value={expiryYear}
+            onChangeText={(text) => setExpiryYear(text)}
+          />
+        </View>
 
         <View style={styles.subtitleContainer}>
           <FontAwesome name="lock" size={20} color="#BA99FE" />
-          <Text style={[styles.signInText, { color: "#414141" }]}>Code</Text>
+          <Text style={[styles.subtitle, { color: "#414141" }]}>Code</Text>
         </View>
         <TextInput
-          style={[styles.input, { fontFamily: "NunitoSans_400Regular" }]}
+          style={{...styles.input,  fontFamily: "NunitoSans_400Regular" }}
           placeholder="CVV"
+          value={cvv}
+          onChangeText={(text) => setCvv(text)}
         />
 
         <View style={styles.checkboxContainer}>
           <Checkbox
-            style={styles.checkbox}
-            value={checked}
-            onValueChange={setChecked}
+            style={{width: 25, height: 25}}
+            value={userInfo.saveBankCardDetails}
+            onValueChange={() => dispatch(toggleSaveBankCardDetails())}
           />
           <Text
             style={[
               styles.checkboxLabel,
-              { fontFamily: "KronaOne_400Regular" },
+              { fontFamily: "KronaOne_400Regular", fontSize: 12 },
             ]}
           >
-            Do you want to save your bank card details?
+            Save bank card details
           </Text>
         </View>
 
@@ -102,12 +197,7 @@ const PaymentScreen = () => {
         </Text>
 
         <TouchableOpacity style={styles.payButton} onPress={handlePayPress}>
-          <Text
-            style={[
-              styles.payButtonText,
-              { fontFamily: "KronaOne_400Regular" },
-            ]}
-          >
+          <Text style={{...styles.payButtonText, fontFamily: "KronaOne_400Regular" }}>
             Pay
           </Text>
         </TouchableOpacity>
@@ -127,23 +217,20 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
     position: "relative",
-    marginTop: 30,
+    //marginTop: 30,
   },
   subtitleContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 15,
   },
-  signInText: {
-    fontFamily: "KronaOne_400Regular",
-    fontSize: 13,
-  },
-
   subtitle: {
     fontSize: 16,
-   marginHorizontal : 30,
+    marginHorizontal : 10,
     flex: 1,
+    fontFamily: "KronaOne_400Regular",
+    fontSize: 13,
   },
   subtitleIcon: {
     marginRight: 4,
@@ -159,7 +246,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 8,
-    margin: -10,
+    //margin: -10,
     borderRadius: 8,
   },
   checkboxContainer: {
@@ -189,7 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 15,
     fontSize: 16,
-    marginHorizontal: 35,
+    marginHorizontal: 25,
     marginBottom: 20,
 
     borderRadius: 50,

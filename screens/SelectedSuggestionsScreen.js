@@ -38,7 +38,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
   const scrollViewRef = useRef(null);
   
   const { width } = useWindowDimensions();
-  const { trip, img, tripIndex, isBookmarked, tripId } = route.params;
+  const { trip, img, tripIndex, isBookmarked, tripId, isReserved } = route.params;
   const userInfo = useSelector((state) => state.userInfo.value);
   const dispatch = useDispatch();
 
@@ -99,7 +99,8 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
 
   // payment
   const handleContinueToPaymentPress = () => {
-    navigation.navigate("PaymentHomeStack");
+    //navigation.navigate("PaymentHomeStack");
+    navigation.navigate("PaymentHomeStack", { tripId });
   };
 
   //const tripIdRef = useRef(tripId);
@@ -292,14 +293,14 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
       </GradientFontColor>
       <View style={styles.activitiesContainer}>{activities}</View>
 
-      <TouchableOpacity
+      {!isReserved && <TouchableOpacity
         style={styles.continueToPaymentButton}
         onPress={handleContinueToPaymentPress}
       >
         <Text style={styles.continueToPaymentButtonText}>
           Continue to Payment
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </ScrollView>
   );
 }

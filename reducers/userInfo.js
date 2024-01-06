@@ -9,6 +9,7 @@ const initialState = {
     email: null,
     bookmarked: [false, false],
     suggestedTripsIds: [null, null],
+    saveBankCardDetails: false, // saved in database
   },
 };
 
@@ -44,6 +45,9 @@ export const userInfoSlice = createSlice({
     setSuggestedTripsIds: (state, action) => {
       state.value.suggestedTripsIds = action.payload;
     },
+    toggleSaveBankCardDetails: (state) => {
+      state.value.saveBankCardDetails = !state.value.saveBankCardDetails;
+    },
   },
 });
 
@@ -55,5 +59,6 @@ export const {
   resetBookmarks,
   setSuggestedTripId,
   setSuggestedTripsIds,
+  toggleSaveBankCardDetails,
 } = userInfoSlice.actions;
 export default userInfoSlice.reducer;

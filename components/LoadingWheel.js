@@ -11,17 +11,26 @@ export default function LoadingWheel() {
   },[]);
 
   return (
-    <View style={{...styles.loadingWheel, transform: [{ translateX: -50}, {translateY: -50}, { rotate: `${angle}deg` }]}}
-    ></View>
+    <View style={styles.container}>
+      <View style={{...styles.loadingWheel, transform: [{ translateX: -50}, {translateY: -50}, { rotate: `${angle}deg` }]}}
+      ></View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    zIndex: 1,
+    position: "absolute",
+  },
   loadingWheel: {
     position: "absolute",
     top: '50%',
     left: '50%',  
-    zIndex: 100,
+    zIndex: 1,
     width: 100,
     height: 100,
     borderLeftWidth: 10,

@@ -29,6 +29,7 @@ import { connect, disconnect, loadDetails } from "../reducers/userInfo";
 import SigninForm from "../components/SigninForm";
 import SignupForm from "../components/SignupForm";
 import { CustomText } from "../components/CustomText";
+import LoadingWheel from "../components/LoadingWheel";
 
 const { ipAddress, port, backendURLprefix } = require("../myVariables");
 
@@ -39,6 +40,8 @@ export default function ProfileScreen({ navigation }) {
 
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -55,12 +58,14 @@ export default function ProfileScreen({ navigation }) {
     //console.log("handleSubmitSigninForm");
     // setIsSigningIn(false);
     //const data = await fetch(`http://${ipAddress}:${port}/users/signin`, {
+    setIsLoading(true);
     const data = await fetch(`${backendURLprefix}users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     }).then((resp) => resp.json());
     //console.log(data);
+    setIsLoading(false);
     if (data.result) {
       dispatch(connect(true));
       setIsSigningIn(false);
@@ -80,11 +85,13 @@ export default function ProfileScreen({ navigation }) {
   const signUp = async (firstName, lastName, email, password) => {
     // setIsSigningUp(false);
     //const data = await fetch(`http://${ipAddress}:${port}/users/signup`, {
+    setIsLoading(true);
     const data = await fetch(`${backendURLprefix}users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password }),
     }).then((resp) => resp.json());
+    setIsLoading(false);
     // console.log(data);
     if (data.result) {
       dispatch(connect());
@@ -145,6 +152,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={[styles.container, { height }]}>
+      {isLoading && <LoadingWheel/>}
       {modalToShow()}
     </SafeAreaView>
   );

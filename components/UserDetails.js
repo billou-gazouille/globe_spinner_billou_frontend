@@ -24,6 +24,7 @@ const { ipAddress, port, backendURLprefix } = require("../myVariables");
 import { useIsFocused } from '@react-navigation/native';
 
 import { unsaveTrip } from "../modules/saveOrUnsaveTrip";
+import LoadingWheel from "./LoadingWheel";
 
 
 import {
@@ -47,6 +48,9 @@ export default function UserDetails({ logout, navigation }) {
     const userInfo = useSelector((state) => state.userInfo.value);
 
     const [savedTrips, setSavedTrips] = useState([]);
+    const [reservedTrips, setReservedTrips] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const isFocused = useIsFocused();
     
@@ -134,9 +138,11 @@ export default function UserDetails({ logout, navigation }) {
     };
 
     const loadSavedTrips = async () => {
+        setIsLoading(true);
         const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
+        setIsLoading(false);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
         //console.log('minimalistTrips: ', minimalistTrips);
         const imagesURLs = await Promise.all(minimalistTrips.map(t => getPlaceImage(t.destination.name)));
@@ -145,9 +151,24 @@ export default function UserDetails({ logout, navigation }) {
         setSavedTrips(minimalistTrips);
     };
 
+    const loadReservedTrips = async () => {
+        //setIsLoading(true);
+        const reservedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/reservedTrips`)
+            .then(resp => resp.json());
+        //console.log('reservedTripsReceived: ', reservedTripsReceived);
+        //setIsLoading(false);
+        const minimalistTrips = reservedTripsReceived.map(t => getMinimalistTripFormat(t));
+        //console.log('minimalistTrips: ', minimalistTrips);
+        const imagesURLs = await Promise.all(minimalistTrips.map(t => getPlaceImage(t.destination.name)));
+        //console.log('reservedTrips...', imagesURLs);
+        minimalistTrips.forEach((t, i) => t.img = imagesURLs[i]);
+        setReservedTrips(minimalistTrips);
+    };
+
     useEffect(() => {
         if (!isFocused) return;
         loadSavedTrips();
+        loadReservedTrips();
     }, [isFocused]);
 
     // useEffect(() => {
@@ -160,12 +181,15 @@ export default function UserDetails({ logout, navigation }) {
     };
 
     const handleDeleteTrip = async (tripId) => {
+        setIsLoading(true);
         await unsaveTrip(true, userInfo.token, tripId);
         loadSavedTrips();
     };
 
-    const openTrip = (tripId) => {
-        const trip = savedTrips.find(t => t._id === tripId);
+    const openTrip = (tripId, isReserved=false) => {
+        const trips = [...savedTrips, ...reservedTrips];
+        //const trip = savedTrips.find(t => t._id === tripId);
+        const trip = trips.find(t => t._id === tripId);
         //console.log('trip.img: ', trip.img);
         navigation.navigate("SelectedSuggestionsHomeStack", {
             trip: trip,
@@ -175,6 +199,7 @@ export default function UserDetails({ logout, navigation }) {
             tripIndex: null,
             isBookmarked: true,
             tripId: tripId,
+            isReserved,
           });
     };
 
@@ -201,17 +226,52 @@ export default function UserDetails({ logout, navigation }) {
                 </TouchableOpacity>          
             </View>
         );
-    })
+    });
+
+    const reservedTripsJSX = reservedTrips.map((trip, i) => {
+        return (
+            <View key={i} style={styles.savedTripItem}>
+                {/* <Text style={styles.savedTripText}>- {trip.destination.name}, {trip.destination.country} ({trip.nbrOfNights} nights)</Text> */}
+                <TouchableOpacity 
+                    style={styles.savedTripButton} 
+                    onPress={() => openTrip(trip._id, true)} 
+                >
+                    <CustomText style={styles.savedTripText}>{trip.destination.name} ({trip.nbrOfNights} nights)</CustomText>
+                </TouchableOpacity> 
+                {/* <TouchableOpacity 
+                    style={styles.trashButton}
+                    onPress={() => handleDeleteTrip(trip._id)}
+                >
+                    <FontAwesome 
+                        name="trash-o" 
+                        size={30} 
+                        color={'red'} 
+                        //style={{marginLeft: 50}}
+                    />
+                </TouchableOpacity>           */}
+            </View>
+        );
+    });
 
     return (
         <View style={styles.container}>
+            {isLoading && <LoadingWheel/>}
             {/* <Text style={{ fontSize: 30, color: "black" }}>User details...</Text> */}
-            <GradientFontColor style={{fontSize: 28}}>
+            {/* <GradientFontColor style={{fontSize: 28}}>
                 Hello {userInfo.firstName} !
-            </GradientFontColor>
-            <CustomText style={{ color: "black", fontSize: 24, margin: 20, fontWeight: 'bold' }}>
-                My account info
-            </CustomText>
+            </GradientFontColor> */}
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <CustomText style={{ color: "black", fontSize: 24, margin: 20, fontWeight: 'bold' }}>
+                    My account info
+                </CustomText>
+                <TouchableOpacity
+                    style={styles.logoutButton}
+                    onPress={() => HandlePressLogout()}
+                >
+                    <Text style={{ fontSize: 14, color: "black", fontWeight: 'bold',marginRight: 10 }}>Logout</Text>
+                    <FontAwesome name="sign-out" size={30} color={'black'} />
+                </TouchableOpacity>
+            </View>
             <View style={styles.userDetailsContainer}>
                 <CustomText style={styles.userDetail}>
                 first name: {userInfo.firstName}
@@ -223,17 +283,24 @@ export default function UserDetails({ logout, navigation }) {
                 email: {userInfo.email}
                 </CustomText>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={styles.logoutButton}
                 onPress={() => HandlePressLogout()}
             >
                 <Text style={{ fontSize: 16, color: "black", fontWeight: 'bold',marginRight: 10 }}>Logout</Text>
                 <FontAwesome name="sign-out" size={40} color={'black'} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            
             <CustomText style={styles.savedTripsTitle}>My saved trips ({savedTrips.length})</CustomText>
             {!savedTrips.length && <CustomText style={{fontSize: 16}}>You don't have any saved trips.</CustomText>}
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {savedTripsJSX}
+            </ScrollView>
+            
+            <CustomText style={styles.savedTripsTitle}>My reserved trips ({reservedTrips.length})</CustomText>
+            {!reservedTrips.length && <CustomText style={{fontSize: 16}}>You don't have any reserved trips.</CustomText>}
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                {reservedTripsJSX}
             </ScrollView>
         </View>
     );
@@ -255,12 +322,17 @@ const styles = StyleSheet.create({
         marginBottom: 10,
       },
       logoutButton: {
-        width: 150,
-        margin: 10,
-        flexDirection: 'row',
+        // width: 150,
+        // margin: 10,
+        // flexDirection: 'row',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: '#BA99FE',
+        // borderRadius: 10,
+        width: 70,
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        //borderWidth: 1,
         backgroundColor: '#BA99FE',
         borderRadius: 10,
       },
@@ -268,7 +340,7 @@ const styles = StyleSheet.create({
         fontSize: 24,
         color: 'black',
         fontWeight: 'bold',
-        marginTop: 30,
+        marginTop: 20,
         marginBottom: 10,
       },
       savedTripText: {
