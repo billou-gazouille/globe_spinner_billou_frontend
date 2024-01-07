@@ -38,7 +38,10 @@ export default function SigninForm({ submit, closeModal }) {
       Alert.alert("Some fields are missing!");
       return;
     }
-    await submit(email, password);
+    const response = await submit(email, password);
+    if (!response.result) {
+      return Alert.alert(response.error);
+    }
   };
 
   return (
@@ -103,9 +106,8 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 40,
     height: 40,
-    right: -20,
-    top: 15,
-    marginTop: -15,
+    right: -15,
+    top: 10,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",

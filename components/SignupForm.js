@@ -73,11 +73,9 @@ export default function SignupForm({ submit, closeModal }) {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={[styles.scrollView, { width: width }]}>
         <StatusBar style="auto" />
-        <View>
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <FontAwesome name="close" size={30} color="black" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+          <FontAwesome name="close" size={30} color="black" />
+        </TouchableOpacity>
         <View style={styles.titleContainer}>
           <GradientFontColor style={styles.title}>Sign</GradientFontColor>
           <Text style={styles.titleUp}>up</Text>
@@ -216,12 +214,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   closeButton: {
-    width: 60,
-    height: 30,
+    width: 40,
+    height: 40,
+    right: 10,
     top: 10,
-    right: -200,
-    //marginBottom: 50,
-    zIndex: 99,
     position: "absolute",
     justifyContent: "center",
     alignItems: "center",
