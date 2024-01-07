@@ -120,7 +120,7 @@ export default function SuggestionsScreen({ navigation }) {
       img: getImage(tripIndex),
       tripIndex: tripIndex,
       isBookmarked: userInfo.bookmarked[tripIndex],
-      tripId: userInfo.suggestedTripsIds[tripIndex],
+      // tripId: userInfo.suggestedTripsIds[tripIndex],
       isReserved: false,
     });
   };

@@ -138,11 +138,11 @@ export default function UserDetails({ logout, navigation }) {
     };
 
     const loadSavedTrips = async () => {
-        setIsLoading(true);
+        //setIsLoading(true);
         const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
-        setIsLoading(false);
+        //setIsLoading(false);
         const minimalistTrips = savedTripsReceived.map(t => getMinimalistTripFormat(t));
         //console.log('minimalistTrips: ', minimalistTrips);
         const imagesURLs = await Promise.all(minimalistTrips.map(t => getPlaceImage(t.destination.name)));
@@ -167,8 +167,13 @@ export default function UserDetails({ logout, navigation }) {
 
     useEffect(() => {
         if (!isFocused) return;
-        loadSavedTrips();
-        loadReservedTrips();
+        const load = async () => {
+            setIsLoading(true);
+            await loadSavedTrips();
+            await loadReservedTrips();
+            setIsLoading(false);
+        };
+        load();
     }, [isFocused]);
 
     // useEffect(() => {
@@ -184,6 +189,7 @@ export default function UserDetails({ logout, navigation }) {
         setIsLoading(true);
         await unsaveTrip(true, userInfo.token, tripId);
         loadSavedTrips();
+        setIsLoading(false);
     };
 
     const openTrip = (tripId, isReserved=false) => {
@@ -199,7 +205,7 @@ export default function UserDetails({ logout, navigation }) {
             tripIndex: null,
             isBookmarked: true,
             tripId: tripId,
-            isReserved,
+            isReserved: isReserved,
           });
     };
 

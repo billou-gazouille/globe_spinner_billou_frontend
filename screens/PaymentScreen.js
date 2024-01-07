@@ -25,7 +25,8 @@ import { useSelector, useDispatch } from "react-redux";
 import LoadingWheel from '../components/LoadingWheel';
 
 const PaymentScreen = ({ route }) => {
-  const { tripId } = route.params;
+  const { tripId, tripIndex } = route.params;
+  console.log('tripId: ', tripId, ';  tripIndex: ', tripIndex);
   const navigation = useNavigation();
 
   const userInfo = useSelector((state) => state.userInfo.value);
@@ -84,8 +85,12 @@ const PaymentScreen = ({ route }) => {
         return;
       }
     }
-    const url = `${backendURLprefix}users/${userInfo.token}/reserveTripById/${tripId}`;
-      const pay = await fetch(url, {
+    // either (tripId is null and tripIndex has value) OR (both have value):
+    const url = tripId ?  // priority to tripId
+      `${backendURLprefix}users/${userInfo.token}/reserveTripById/${tripId}` :
+      `${backendURLprefix}users/${userInfo.token}/reserveTrip/${tripIndex}`;
+    console.log(url);
+    const pay = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })

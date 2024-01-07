@@ -99,8 +99,12 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
 
   // payment
   const handleContinueToPaymentPress = () => {
-    //navigation.navigate("PaymentHomeStack");
-    navigation.navigate("PaymentHomeStack", { tripId });
+    navigation.navigate("PaymentHomeStack", { 
+      // if we came from ProfileScreen, tripId is taken from DB,
+      // otherwise we take id from redux store (could be null):
+      tripId: tripId ? tripId : userInfo.suggestedTripsIds[tripIndex],
+      tripIndex // if tripId is null, then tripIndex has a value
+    });
   };
 
   //const tripIdRef = useRef(tripId);
