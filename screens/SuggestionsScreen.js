@@ -139,8 +139,18 @@ export default function SuggestionsScreen({ navigation }) {
     isLoadingGenerate || isLoadingPlace1 || isLoadingPlace2;
   const rgBtnColor = preventRegenerate ? "#C2C2C2" : "#3972D9";
 
+  const errorMsg = (msg) => 
+    <View style={{
+      height: '100%', position:'absolute', justifyContent: 'center', alignItems: 'center'}}>
+      <CustomText style={{fontSize: 24, color: 'red'}}>Error generating trips.</CustomText>
+      <CustomText style={{fontSize: 18, color: 'red'}}>({msg})</CustomText>
+      <CustomText style={{fontSize: 24, marginTop: 40}}>Please try again.</CustomText>
+    </View>;
+
+
   return (
     <SafeAreaView style={styles.container}>
+      {errorGenerate && errorMsg(errorGenerate)}
       {isLoadingGenerate && <LoadingWheel />}
       <GradientFontColor style={styles.title}>Suggestions</GradientFontColor>
       <View style={styles.cardsContainer}>

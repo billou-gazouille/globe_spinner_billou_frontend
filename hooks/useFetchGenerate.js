@@ -57,8 +57,9 @@ export default function useFetchGenerate({
 
       setGeneratedTrips(null);
       setIsLoadingGenerate(true);
+      setErrorGenerate(null);
 
-      //console.log('generateRouteURL: ', generateRouteURL);
+      console.log('generateRouteURL: ', generateRouteURL);
 
       await fetch(generateRouteURL, {
         ...fetchGenerateRouteOptions,
@@ -77,6 +78,8 @@ export default function useFetchGenerate({
           if (!data.result) {
             tripsValid = false;
             setErrorGenerate(data.error);
+            setIsLoadingGenerate(false);
+            //requestController.abort();
             return;
           }
           setGeneratedTrips(data.trips);
@@ -135,7 +138,7 @@ export default function useFetchGenerate({
           setErrorPlace2(error);
         });
 
-      return () => abortController.abort();
+      return () => requestController.abort();
     };
 
     fetchGenerate();

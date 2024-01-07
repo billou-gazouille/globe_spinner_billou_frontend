@@ -59,7 +59,9 @@ export default function ProfileScreen({ navigation }) {
     // setIsSigningIn(false);
     //const data = await fetch(`http://${ipAddress}:${port}/users/signin`, {
     setIsLoading(true);
-    const data = await fetch(`${backendURLprefix}users/signin`, {
+    const url = `${backendURLprefix}users/signin`;
+    //console.log('sign in url: ', url);
+    const data = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
