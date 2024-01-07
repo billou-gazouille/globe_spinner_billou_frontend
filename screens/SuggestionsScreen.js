@@ -19,7 +19,7 @@ import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { resetBookmarks, toggleBookmark, setSuggestedTripId, setSuggestedTripsIds } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
 
-const { ipAddress, port, backendURLprefix } = require("../myVariables");
+const { backendURLprefix } = require("../myVariables");
 
 const DEFAULT_LANDSCAPE_URI = 'https://images.pexels.com/photos/19511286/pexels-photo-19511286.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200';
 

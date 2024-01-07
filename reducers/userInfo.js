@@ -28,8 +28,10 @@ export const userInfoSlice = createSlice({
     },
     disconnect: (state) => {
       //state.value.isConnected = false;
+      //console.log('state.value before: ', state.value);
       state.value = {...initialState.value};
       state.value.isConnected = false;
+      //console.log('state.value after: ', state.value);
     },
     toggleBookmark: (state, action) => {
       //console.log("action", action.payload);

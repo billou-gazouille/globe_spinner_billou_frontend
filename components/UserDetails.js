@@ -50,7 +50,8 @@ export default function UserDetails({ logout, navigation }) {
     const [savedTrips, setSavedTrips] = useState([]);
     const [reservedTrips, setReservedTrips] = useState([]);
 
-    const [isLoading, setIsLoading] = useState(true);
+    //const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     const isFocused = useIsFocused();
     
@@ -139,7 +140,10 @@ export default function UserDetails({ logout, navigation }) {
 
     const loadSavedTrips = async () => {
         //setIsLoading(true);
-        const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)
+        const url = `${backendURLprefix}users/${userInfo.token}/savedTrips`;
+        //console.log('loadSavedTrips url: ', url);
+        //console.log('userInfo: ', userInfo);
+        const savedTripsReceived = await fetch(url)
             .then(resp => resp.json());
         //console.log('savedTripsReceived: ', savedTripsReceived);
         //setIsLoading(false);

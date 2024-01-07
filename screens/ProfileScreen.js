@@ -64,10 +64,10 @@ export default function ProfileScreen({ navigation }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     }).then((resp) => resp.json());
-    //console.log(data);
+    //console.log('sign in response data: ', data);
     setIsLoading(false);
     if (data.result) {
-      dispatch(connect(true));
+      //dispatch(connect());
       setIsSigningIn(false);
       dispatch(
         loadDetails({
@@ -77,6 +77,8 @@ export default function ProfileScreen({ navigation }) {
           email: data.email,
         })
       );
+      //console.log('loadedDetails: ', userInfo);
+      dispatch(connect());  // dispatch connect must be AFTER dispatch loadDetails !!
       navigation.navigate("Home");
     }
     return data;
@@ -92,9 +94,8 @@ export default function ProfileScreen({ navigation }) {
       body: JSON.stringify({ firstName, lastName, email, password }),
     }).then((resp) => resp.json());
     setIsLoading(false);
-    // console.log(data);
     if (data.result) {
-      dispatch(connect());
+      //dispatch(connect());
       setIsSigningUp(false);
       dispatch(
         loadDetails({
@@ -104,6 +105,7 @@ export default function ProfileScreen({ navigation }) {
           email,
         })
       );
+      dispatch(connect());  // dispatch connect must be AFTER dispatch loadDetails !!
       navigation.navigate("Home");
     }
     return data;

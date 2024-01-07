@@ -8,7 +8,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const SignModal = ({ onClose, onSignIn, onSignUp, closeSignModal }) => {
   const userInfo = useSelector((state) => state.userInfo.value);
-  console.log(userInfo.isConnected);
+  //console.log(userInfo.isConnected);
 
   //const dispatch = useDispatch();
 

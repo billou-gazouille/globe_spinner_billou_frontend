@@ -68,22 +68,22 @@ const HomeStack = () => {
   );
 };
 
-const ProfileStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        headerTitle: "",
-        headerBackTitleVisible: false,
-        headerBackVisible: true,
-        headerTintColor: "#ba99FE",
-      }}
-    >
-      <Stack.Screen name="ProfileStack" component={ProfileScreen} />
-      {/* <Stack.Screen name="SuggestionsStack" component={SuggestionsScreen} /> */}
-    </Stack.Navigator>
-  );
-};
+// const ProfileStack = () => {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerShown: true,
+//         headerTitle: "",
+//         headerBackTitleVisible: false,
+//         headerBackVisible: true,
+//         headerTintColor: "#ba99FE",
+//       }}
+//     >
+//       <Stack.Screen name="ProfileStack" component={ProfileScreen} />
+//       {/* <Stack.Screen name="SuggestionsStack" component={SuggestionsScreen} /> */}
+//     </Stack.Navigator>
+//   );
+// };
 
 const TabNavigator = () => {
   let iconBackgroundColor = "#ba99fe";

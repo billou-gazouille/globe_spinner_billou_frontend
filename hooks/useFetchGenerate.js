@@ -14,7 +14,7 @@ const imageAPIoptions = {
 
 const imagesAPIprefix = "https://api.pexels.com/v1/search?query=";
 
-export default function useFetchSequence({
+export default function useFetchGenerate({
   generateRouteURL,
   generateFilters,
   triggerFirstFetch,
@@ -30,8 +30,6 @@ export default function useFetchSequence({
   const [place2, setPlace2] = useState(null);
   const [isLoadingPlace2, setIsLoadingPlace2] = useState(false);
   const [errorPlace2, setErrorPlace2] = useState(null);
-
-  // const isScreenFocused = useIsFocused();
 
   useEffect(() => {
     const fetchGenerate = async () => {
@@ -57,12 +55,10 @@ export default function useFetchSequence({
         body: JSON.stringify(filters),
       };
 
-      //const abortController = new AbortController();
-
-      // if (!isScreenFocused) return;
-
       setGeneratedTrips(null);
       setIsLoadingGenerate(true);
+
+      //console.log('generateRouteURL: ', generateRouteURL);
 
       await fetch(generateRouteURL, {
         ...fetchGenerateRouteOptions,
@@ -86,9 +82,7 @@ export default function useFetchSequence({
           setGeneratedTrips(data.trips);
           setIsLoadingGenerate(false);
           place1URL = `${imagesAPIprefix}${data.trips[0].destination.name}+aerial`;
-          //console.log('place1URL: ', place1URL);
           place2URL = `${imagesAPIprefix}${data.trips[1].destination.name}+aerial`;
-          //console.log('place2URL: ', place2URL);
         })
         .catch((error) => {
           setErrorGenerate(error);
@@ -112,7 +106,6 @@ export default function useFetchSequence({
           return response.json();
         })
         .then((data) => {
-          //console.log('[place1]', data);
           setPlace1(data);
           setIsLoadingPlace1(false);
         })
@@ -135,7 +128,6 @@ export default function useFetchSequence({
           return response.json();
         })
         .then((data) => {
-          //console.log('[place2]', data);
           setPlace2(data);
           setIsLoadingPlace2(false);
         })
@@ -147,7 +139,7 @@ export default function useFetchSequence({
     };
 
     fetchGenerate();
-  }, [triggerFirstFetch /*isScreenFocused*/]);
+  }, [triggerFirstFetch]);
 
   return {
     generatedTrips,
