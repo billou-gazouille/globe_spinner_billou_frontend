@@ -90,6 +90,7 @@ export default function useFetchGenerate({
         .catch((error) => {
           setErrorGenerate(error);
           setIsLoadingGenerate(false);
+          requestController.abort();
           tripsValid = false;
         });
 
