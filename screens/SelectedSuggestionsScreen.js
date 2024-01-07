@@ -297,7 +297,7 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
       </GradientFontColor>
       <View style={styles.activitiesContainer}>{activities}</View>
 
-      {!isReserved && <TouchableOpacity
+      {!isReserved && userInfo.isConnected && <TouchableOpacity
         style={styles.continueToPaymentButton}
         onPress={handleContinueToPaymentPress}
       >
@@ -305,6 +305,9 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
           Continue to Payment
         </Text>
       </TouchableOpacity>}
+      {!userInfo.isConnected && <View style={{marginVertical: 40}}>
+        <CustomText style={{fontSize: 18}}>Please connect to save or book a trip.</CustomText>
+      </View>}
     </ScrollView>
   );
 }
