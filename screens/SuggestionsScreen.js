@@ -143,7 +143,7 @@ export default function SuggestionsScreen({ navigation }) {
     <View style={{
       height: '100%', position:'absolute', justifyContent: 'center', alignItems: 'center'}}>
       <CustomText style={{fontSize: 24, color: 'red'}}>Error generating trips.</CustomText>
-      <CustomText style={{fontSize: 18, color: 'red'}}>({msg})</CustomText>
+      {/* <CustomText style={{fontSize: 18, color: 'red'}}>({msg})</CustomText> */}
       <CustomText style={{fontSize: 24, marginTop: 40}}>Please try again.</CustomText>
     </View>;
 

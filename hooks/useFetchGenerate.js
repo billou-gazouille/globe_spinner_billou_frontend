@@ -67,7 +67,7 @@ export default function useFetchGenerate({
       })
         .then((response) => {
           if (!response.ok) {
-            setErrorGenerate(response.statusText);
+            //setErrorGenerate(response.statusText);
             tripsValid = false;
             return;
           }
@@ -89,6 +89,7 @@ export default function useFetchGenerate({
         })
         .catch((error) => {
           setErrorGenerate(error);
+          setIsLoadingGenerate(false);
           tripsValid = false;
         });
 
