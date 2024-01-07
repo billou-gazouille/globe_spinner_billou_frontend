@@ -79,7 +79,7 @@ export default function useFetchGenerate({
             tripsValid = false;
             setErrorGenerate(data.error);
             setIsLoadingGenerate(false);
-            //requestController.abort();
+            requestController.abort();
             return;
           }
           setGeneratedTrips(data.trips);
