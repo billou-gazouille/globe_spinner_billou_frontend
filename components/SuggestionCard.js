@@ -75,7 +75,6 @@ export default function SuggestionCard({
           <CustomText>
             {leaveTransportType}-{returnTransportType}
           </CustomText>
-          {/* <CustomText>{price}€</CustomText> */}
         </View>
       </View>
     </TouchableOpacity>
@@ -86,7 +85,6 @@ const styles = StyleSheet.create({
   container: {
     width: "90%",
     height: 200,
-    //  borderWidth: 5,
     justifyContent: "space-between",
     alignItems: "center",
     margin: 10,
@@ -106,7 +104,6 @@ const styles = StyleSheet.create({
   },
   cityTitle: {
     fontSize: 24,
-    // backgroundColor: 'red',
     position: "absolute",
     zIndex: 1,
     color: "black",
@@ -116,8 +113,6 @@ const styles = StyleSheet.create({
     height: "50%",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
-    // backgroundColor: 'green',
   },
   bookmark: {
     position: "absolute",
@@ -128,8 +123,6 @@ const styles = StyleSheet.create({
   cityImg: {
     width: "100%",
     height: "100%",
-    //resizeMode: 'contain',
-    //resizeMode: 'stretch',
     resizeMode: "cover",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -143,8 +136,6 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   activitiesContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
     alignItems: "left",
   },
@@ -152,14 +143,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   accommodationContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
     alignItems: "center",
   },
   transportsContainer: {
-    // width: '50%',
-    // width: '33%',
     justifyContent: "center",
     alignItems: "center",
   },

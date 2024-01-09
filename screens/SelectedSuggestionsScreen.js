@@ -11,19 +11,18 @@ import {
   ImageBackground,
   useWindowDimensions,
 } from "react-native";
-// import BackButton from "../components/BackButton";
+
 import { CustomText } from "../components/CustomText";
 import { useSelector, useDispatch } from "react-redux";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 import GradientFontColor from "../components/GradientFontColor";
-//import toggleBookmarkTrip from "../modules/bookmarkTrip";
 import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { toggleBookmark, setSuggestedTripId } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
 
-import { ipAddress, port, backendURLprefix } from "../myVariables";
+import { backendURLprefix } from "../myVariables";
 
 const colors = {
   black: "#515151",
@@ -106,11 +105,8 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
       tripIndex // if tripId is null, then tripIndex has a value
     });
   };
-
-  //const tripIdRef = useRef(tripId);
   
   const handlePress = async () => {
-    //if (tripIndex !== null) return;
     const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
     if (isCurrentlyBookmarked){
       // unsave:
@@ -120,7 +116,6 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
       // save:
       const save = await saveTrip(userInfo.isConnected, userInfo.token, tripIndex);
       if (save.result){
-        //tripIdRef.current = save.tripId;
         dispatch(setSuggestedTripId({ index: tripIndex, id: save.tripId }));
       }
     }
@@ -136,7 +131,6 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
     if (tripIndex === null) return;
     const checkIfTripSaved = async (tripId) => {
       if (!tripId) return false;
-      //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
       const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)      
         .then(resp => resp.json());
       const savedTripsIds = savedTripsReceived.map(t => t._id);
@@ -214,8 +208,6 @@ export default function SelectedSuggestionsScreen({ navigation, route }) {
           </View>
         </View>
       </View>
-
-      {/* Transports */}
 
       <View style={styles.headingAndSectionPair}>
         <GradientFontColor style={styles.text}>Transports</GradientFontColor>
@@ -351,7 +343,6 @@ const styles = StyleSheet.create({
     width: "95%",
     height: 150,
     marginTop: 10,
-    // color: '#ECECEC',
     shadowColor: colors.black,
     elevation: 10,
     backgroundColor: "#ECECEC",
@@ -381,7 +372,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: "white",
     fontSize: 16,
-    // fontWeight: "bold",
     letterSpacing: 1,
   },
   // ---- ACTIVITIES -----
@@ -396,18 +386,14 @@ const styles = StyleSheet.create({
   activity: {
     paddingTop: 15,
     paddingHorizontal: 25,
-    // display: "block",
   },
   lastActivityContent: {
     borderBottomWidth: 0,
-    // paddingVertical: 15,
   },
   activityContent: {
-    // marginTop: 10,
     paddingTop: 10,
     paddingBottom: 20,
     borderBottomWidth: 3,
-    // borderStyle: "dashed",
     borderBottomColor: "white",
   },
   activityName: {

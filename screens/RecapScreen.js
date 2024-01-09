@@ -26,9 +26,6 @@ const RecapScreen = () => {
       <View style={styles.overlay}>
 
         <GradientFontColor style={styles.title}>Recap Trip</GradientFontColor>
-        
-        
-       
 
         <Text style={styles.subtitle}>Where to</Text>
         <View style={styles.infoContainer}>
@@ -95,9 +92,6 @@ const styles = StyleSheet.create({
     fontFamily: "KronaOne_400Regular",
     marginTop:40,
   },
-  // itemContainer: {
-  //   marginBottom: 12,
-  // },
   subtitle: {
     fontSize: 15,
     flex: 1,

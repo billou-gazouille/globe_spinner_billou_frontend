@@ -7,14 +7,13 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-// import BackButton from "../components/BackButton";
+
 import { useSelector, useDispatch } from "react-redux";
 import SuggestionCard from "../components/SuggestionCard";
 import { CustomText } from "../components/CustomText";
 import LoadingWheel from "../components/LoadingWheel";
 import useFetchGenerate from "../hooks/useFetchGenerate";
 import GradientFontColor from "../components/GradientFontColor";
-//import toggleBookmarkTrip from "../modules/bookmarkTrip";
 import { saveTrip, unsaveTrip } from "../modules/saveOrUnsaveTrip";
 import { resetBookmarks, toggleBookmark, setSuggestedTripId, setSuggestedTripsIds } from "../reducers/userInfo";
 import { useIsFocused } from "@react-navigation/native";
@@ -30,10 +29,6 @@ export default function SuggestionsScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
 
-  //console.log("userInfo:", filtersFromStore);
-
-  //const tripIds = useRef([null, null]);
-
   const toggleSave = async (tripIndex, tripId) => {
     const isCurrentlyBookmarked = userInfo.bookmarked[tripIndex];
     if (isCurrentlyBookmarked){
@@ -44,14 +39,11 @@ export default function SuggestionsScreen({ navigation }) {
       // save:
       const save = await saveTrip(userInfo.isConnected, userInfo.token, tripIndex);
       if (save.result){
-        //tripIds.current[tripIndex] = save.tripId;
         dispatch(setSuggestedTripId({ index: tripIndex, id: save.tripId }));
       }
     }
     dispatch(toggleBookmark(tripIndex));
   };
-
-  //console.log("suggestions", userInfo.bookmarked);
 
   const {
     generatedTrips,
@@ -64,7 +56,6 @@ export default function SuggestionsScreen({ navigation }) {
     isLoadingPlace2,
     errorPlace2,
   } = useFetchGenerate({
-    //generateRouteURL: `http://${ipAddress}:${port}/trips/generate`,
     generateRouteURL: `${backendURLprefix}trips/generate`,
     generateFilters: filtersFromStore,
     triggerFirstFetch: triggerFetchGenerate,
@@ -72,12 +63,10 @@ export default function SuggestionsScreen({ navigation }) {
 
   useEffect(() => {
     dispatch(resetBookmarks());
-    //tripIds.current = [null, null];
     dispatch(setSuggestedTripsIds([null, null]));
   }, [generatedTrips]);
 
   const regenerateAll = () => {
-    //dispatch(resetBookmarks());
     setTriggerFetchGenerate((prev) => !prev);
   };
 
@@ -85,20 +74,16 @@ export default function SuggestionsScreen({ navigation }) {
     if (!isFocused) return;
     const checkIfTripSaved = async (tripId) => {
       if (!tripId) return false;
-      //const savedTripsReceived = await fetch(`http://${ipAddress}:${port}/users/${userInfo.token}/savedTrips`)
       const savedTripsReceived = await fetch(`${backendURLprefix}users/${userInfo.token}/savedTrips`)      
         .then(resp => resp.json());
       const savedTripsIds = savedTripsReceived.map(t => t._id);
-      //console.log('savedTripsIds: ', savedTripsIds);
       return savedTripsIds.includes(tripId);
     };
     checkIfTripSaved(userInfo.suggestedTripsIds[0]).then(isTrip0saved => {
-      //console.log('isTrip0saved: ', isTrip0saved);
       if (isTrip0saved !== userInfo.bookmarked[0]) 
         dispatch(toggleBookmark(0));
     });
     checkIfTripSaved(userInfo.suggestedTripsIds[1]).then(isTrip1saved => {
-      //console.log('isTrip1saved: ', isTrip1saved);
       if (isTrip1saved !== userInfo.bookmarked[1]) 
         dispatch(toggleBookmark(1));
     });
@@ -120,7 +105,6 @@ export default function SuggestionsScreen({ navigation }) {
       img: getImage(tripIndex),
       tripIndex: tripIndex,
       isBookmarked: userInfo.bookmarked[tripIndex],
-      // tripId: userInfo.suggestedTripsIds[tripIndex],
       isReserved: false,
     });
   };
@@ -188,7 +172,6 @@ export default function SuggestionsScreen({ navigation }) {
       >
         <CustomText style={styles.regenerateAllText}>REGENERATE ALL</CustomText>
       </TouchableOpacity>
-      {/* <BackButton /> */}
     </SafeAreaView>
   );
 }
@@ -204,10 +187,8 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     width: "100%",
-    // height: '60%',
     justifyContent: "space-between",
     alignItems: "center",
-    // borderWidth: 1,
   },
   title: {
     fontFamily: "KronaOne_400Regular",

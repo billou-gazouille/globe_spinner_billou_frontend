@@ -11,17 +11,11 @@ import {
   SafeAreaView,
   Alert,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import GradienFontColor from "../components/GradientFontColor";
-import { ipAddress } from "../myVariables";
 
 export default function SigninForm({ submit, closeModal }) {
-  //const userInfo = useSelector(state => state.userInfo.value);
-  //console.log(userInfo.isConnected);
-
-  //const dispatch = useDispatch();
 
   const checkHasEmptyField = (fields) => {
     for (let field of fields) {
@@ -117,7 +111,6 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     justifyContent: "center",
     alignItems: "center",
-    // flexWrap: "wrap",
   },
   textAndInput: {
     width: "100%",

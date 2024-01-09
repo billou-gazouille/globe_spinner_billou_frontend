@@ -24,7 +24,6 @@ import { persistStore, persistReducer } from "redux-persist";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  // blacklist: ["userInfo"],
 };
 
 const rootReducer = combineReducers({ filters, userInfo });
@@ -51,7 +50,6 @@ const HomeStack = () => {
         headerBackTitleVisible: false,
         headerBackVisible: true,
         headerTintColor: "#ba99FE",
-        // headerShadowVisible: false,
         headerTransparent: true,
       }}
     >
@@ -67,23 +65,6 @@ const HomeStack = () => {
     </Stack.Navigator>
   );
 };
-
-// const ProfileStack = () => {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerShown: true,
-//         headerTitle: "",
-//         headerBackTitleVisible: false,
-//         headerBackVisible: true,
-//         headerTintColor: "#ba99FE",
-//       }}
-//     >
-//       <Stack.Screen name="ProfileStack" component={ProfileScreen} />
-//       {/* <Stack.Screen name="SuggestionsStack" component={SuggestionsScreen} /> */}
-//     </Stack.Navigator>
-//   );
-// };
 
 const TabNavigator = () => {
   let iconBackgroundColor = "#ba99fe";
@@ -112,9 +93,6 @@ const TabNavigator = () => {
                 width: "70%",
                 borderRadius: 10,
                 paddingVertical: 10,
-                // paddingBottom: 8,
-                // paddingTop: 8,
-                //marginTop: 10,
               }}
             >
               <FontAwesome name={iconName} size={size} color={color} />
@@ -129,7 +107,6 @@ const TabNavigator = () => {
         tabBarStyle: { backgroundColor: "#ba99fe" },
       })}
     >
-      {/* <Tab.Screen name="Profile" component={ProfileStack} /> */}
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Parameters" component={ParametersScreen} />
@@ -138,7 +115,6 @@ const TabNavigator = () => {
 };
 
 export default function App() {
-  //AsyncStorage.clear();
   //persistor.purge();
   return (
     <Provider store={store}>

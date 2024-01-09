@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
@@ -13,12 +12,11 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+
 import GradientFontColor from "./GradientFontColor";
 import { CustomText } from "./CustomText";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Header } from "@react-navigation/elements";
 
 export default function SignupForm({ submit, closeModal }) {
   const { width } = useWindowDimensions();
@@ -28,7 +26,6 @@ export default function SignupForm({ submit, closeModal }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // const [showFieldsError, setShowFieldsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const EMAIL_REGEX =
@@ -63,7 +60,6 @@ export default function SignupForm({ submit, closeModal }) {
       return Alert.alert("Password must be at least 5 characters long!");
     }
     const response = await submit(firstname, lastname, email, password);
-    //console.log(response);
     if (!response.result) {
       return Alert.alert(response.error);
     }
@@ -176,17 +172,14 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     flexDirection: "row",
-    //marginBottom: 10,
     justifyContent: "center",
   },
 
   title: {
-    //marginVertical: 45,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
   },
   titleUp: {
-    //marginVertical: 45,
     fontSize: 40,
     fontFamily: "KronaOne_400Regular",
     color: "#515151",
@@ -195,7 +188,6 @@ const styles = StyleSheet.create({
 
   inputsContainerRow: {
     width: "100%",
-    //marginVertical: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -203,7 +195,6 @@ const styles = StyleSheet.create({
     width: "600%",
     justifyContent: "center",
     alignItems: "center",
-    //marginBottom: 10,
   },
   textInput: {
     width: "10%",
@@ -223,7 +214,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   submitButton: {
-    //marginVertical: 10,
     padding: 10,
     backgroundColor: "#3972D9",
     borderRadius: 25,

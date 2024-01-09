@@ -50,12 +50,10 @@ export default function FiltersScreen({ navigation }) {
     if (query === "" || query.length < 3) {
       return;
     }
-    // console.log("query", query);
 
     fetch(`https://api-adresse.data.gouv.fr/search/?q=${query}`)
       .then((response) => response.json())
       .then(({ features }) => {
-        // console.log(features)
         const suggestions = features.map((data, i) => {
           return {
             id: i + 1,
@@ -63,12 +61,10 @@ export default function FiltersScreen({ navigation }) {
             coordinates: data.geometry.coordinates,
           };
         });
-        // console.log("suggestions", suggestions);
         setDataSet(suggestions);
       });
   };
 
-  // console.log("city", selectedCity);
 
   const selectTransportationMode = (type) => {
     if (!transportType.includes(type)) {
@@ -94,13 +90,7 @@ export default function FiltersScreen({ navigation }) {
       departureDate,
       returnDate,
     };
-
     dispatch(addFiltersToStore({ filters }));
-    // console.log(
-    //   "************************************************************",
-    //   { filters },
-    //   "************************************************************"
-    // );
     navigation.navigate("SuggestionsHomeStack");
   };
 
@@ -118,14 +108,6 @@ export default function FiltersScreen({ navigation }) {
       returnDate,
     ];
     if (checkHasEmptyField(requiredFields)) {
-      // console.log({
-      //   selectedCity,
-      //   budget,
-      //   nbrOfTravelers,
-      //   transportType,
-      //   departureDate,
-      //   returnDate,
-      // });
       return Alert.alert("Some fields are missing!");
     }
     return true;
@@ -136,7 +118,6 @@ export default function FiltersScreen({ navigation }) {
     if (result) {
       handleSubmit();
     }
-    // console.log("handlePressSubmit", handlePressSubmit());
   };
 
   return (
@@ -228,8 +209,6 @@ export default function FiltersScreen({ navigation }) {
               <CustomText>How many people:</CustomText>
               <TextInput
                 style={styles.input}
-                // onChangeText={handleTextChange}
-                // value={"test"}
                 keyboardType="numeric"
                 placeholder="E.g. 3"
                 onChangeText={(number) => setNbrOfTravelers(Number(number))}
@@ -240,8 +219,6 @@ export default function FiltersScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
-                // onChangeText={handleTextChange}
-                // value={"test"}
                 placeholder="E.g. 300€"
                 onChangeText={(number) => setBudget(number)}
               />
@@ -270,7 +247,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     backgroundColor: "white",
-    // paddingBottom: 130,
   },
   keyboardAvoidingView: {
     flex: 1,

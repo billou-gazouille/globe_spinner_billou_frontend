@@ -1,19 +1,13 @@
 import React from "react";
 import { View, Modal, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
 import { CustomText } from "./CustomText";
 import GradientFontColor from "./GradientFontColor";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const SignModal = ({ onClose, onSignIn, onSignUp, closeSignModal }) => {
-  const userInfo = useSelector((state) => state.userInfo.value);
-  //console.log(userInfo.isConnected);
-
-  //const dispatch = useDispatch();
 
   return (
-    // plus de "Modal" car ça bug vraiment trop
     <View style={styles.container}>
       <View>
         <GradientFontColor style={styles.title}>Welcome !</GradientFontColor>
@@ -47,8 +41,6 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
-    // borderColor: 'red',
   },
   titleContainer: {
     flexDirection: "row",

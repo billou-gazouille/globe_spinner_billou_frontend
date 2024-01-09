@@ -26,7 +26,6 @@ import LoadingWheel from '../components/LoadingWheel';
 
 const PaymentScreen = ({ route }) => {
   const { tripId, tripIndex } = route.params;
-  //console.log('tripId: ', tripId, ';  tripIndex: ', tripIndex);
   const navigation = useNavigation();
 
   const userInfo = useSelector((state) => state.userInfo.value);
@@ -89,7 +88,6 @@ const PaymentScreen = ({ route }) => {
     const url = tripId ?  // priority to tripId
       `${backendURLprefix}users/${userInfo.token}/reserveTripById/${tripId}` :
       `${backendURLprefix}users/${userInfo.token}/reserveTrip/${tripIndex}`;
-    //console.log(url);
     const pay = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -222,7 +220,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
     position: "relative",
-    //marginTop: 30,
   },
   subtitleContainer: {
     flexDirection: "row",
@@ -251,7 +248,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 8,
-    //margin: -10,
     borderRadius: 8,
   },
   checkboxContainer: {
